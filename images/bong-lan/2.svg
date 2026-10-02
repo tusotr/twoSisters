@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#F2E9D8"/>
+  <rect x="14" y="14" width="772" height="772" fill="none" stroke="#B98A3E" stroke-width="2" stroke-dasharray="10 8" rx="16"/>
+  <g transform="translate(400,368)" fill="none" stroke="#6C7A4C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="-38" y="-26" width="76" height="56" rx="8"/>
+    <circle cx="0" cy="2" r="16"/>
+    <rect x="-14" y="-38" width="28" height="14" rx="3"/>
+  </g>
+  <text x="50%" y="452" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="700" fill="#3E2A3B" text-anchor="middle">Bong Lan Trung Muoi — Photo 2</text>
+  <text x="50%" y="480" font-family="Manrope, Arial, sans-serif" font-size="15" fill="#8a7c6d" text-anchor="middle">Replace images/bong-lan/2.svg</text>
+</svg>
