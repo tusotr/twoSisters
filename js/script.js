@@ -98,6 +98,32 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!emailRegex.test(value)) return 'Please enter a valid email address.';
       return '';
     },
+    phone: (value) => {
+      if (!value.trim()) return 'Please enter your phone number.';
+
+      // Remove all non-digit characters except leading +
+      const cleaned = value.replace(/[^\d+]/g, '');
+
+      // Accept formats:
+      // +1XXXXXXXXXX, 1XXXXXXXXXX, XXXXXXXXXX
+      // Also allows common formatting: (XXX) XXX-XXXX, XXX-XXX-XXXX, etc.
+      const usCanadaRegex = /^(\+?1)?\d{10}$/;
+
+      if (!usCanadaRegex.test(cleaned)) {
+        return 'Please enter a valid US or Canada phone number (10 digits).';
+      }
+
+      // Extra safety: after stripping, must be exactly 10 or 11 digits (with country code)
+      const digitsOnly = cleaned.replace(/\D/g, '');
+      if (digitsOnly.length === 11 && !digitsOnly.startsWith('1')) {
+        return 'Please enter a valid US or Canada phone number.';
+      }
+      if (digitsOnly.length !== 10 && digitsOnly.length !== 11) {
+        return 'Please enter a valid 10-digit US or Canada phone number.';
+      }
+
+      return '';
+    },
     event_date: (value) => {
       if (!value) return ''; // optional
       const selected = new Date(value);
