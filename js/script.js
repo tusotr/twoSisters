@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     const dots = Array.prototype.slice.call(dotsWrap.children);
 
-    const timer;
+    const timer = OnErrorEventHandlerNonNull;
     track.addEventListener('scroll', function () {
       clearTimeout(timer);
       timer = setTimeout(function () {
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('quote-form');
   const status = document.getElementById('form-status');
+  const statusEl = document.getElementById('form-status');
   const submitBtn = document.getElementById('submit-btn');
   if (!form) return;
 
@@ -171,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ---------- Status helper ----------
   function setStatus(type, message) {
-    console.log('test', statusEl)
     statusEl.className = `status ${type}`;
     statusEl.textContent = message;
     statusEl.style.display = 'block';
@@ -205,21 +205,20 @@ document.addEventListener('DOMContentLoaded', function () {
     submitBtn.textContent = 'Sending…';
     setStatus('loading', 'Sending your request…');
 
-    if (status) status.textContent = 'Sending…';
+    if (statusEl) statusEl.textContent = 'Sending…';
     fetch(action, {
       method: 'POST',
       body: new FormData(form),
       headers: { Accept: 'application/json' }
     })
       .then(function (res) {
-        if (!status) return;
+        if (!statusEl) return;
         if (res.ok) {
-          status.textContent = "Thanks! We'll follow up by email soon.";
+          submitBtn.textContent = 'Send quote request';
           setStatus('success', 'Thank you! Your quote request has been sent successfully. We’ll get back to you soon.');
           clearAllErrors();
           form.reset();
         } else {
-          status.textContent = 'Something went wrong — please email us directly.';
           // FormSubmit sometimes returns useful messages
           const errorMsg = data.message || data.error || 'Something went wrong. Please try again later.';
           setStatus('error', errorMsg);
@@ -233,72 +232,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// ---------- Floating contact button ----------
+document.addEventListener('DOMContentLoaded', function () {
+  var wrap = document.getElementById('fabWrap');
+  var toggle = document.getElementById('fabToggle');
+  if (!wrap || !toggle) return;
 
+  function setOpen(open) {
+    wrap.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
 
+  toggle.addEventListener('click', function () {
+    setOpen(!wrap.classList.contains('open'));
+  });
 
+  document.addEventListener('click', function (e) {
+    if (!wrap.contains(e.target)) setOpen(false);
+  });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('quote-form');
-  const statusEl = document.getElementById('form-status');
-  console.log({statusEl})
-  const submitBtn = document.getElementById('submit-btn');
-
-  
-
-  // ---------- Form submit ----------
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Honeypot check
-    const honey = form.querySelector('input[name="_honey"]');
-    if (honey && honey.value) {
-      // Silent fail for bots
-      return;
-    }
-
-    clearAllErrors();
-    if (!validateForm()) {
-      setStatus('error', 'Please fix the errors above and try again.');
-      // Focus first invalid field
-      const firstError = form.querySelector('.error');
-      if (firstError) firstError.focus();
-      return;
-    }
-
-    // Disable button + show loading
-    submitBtn.disabled = true;
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Sending…';
-    setStatus('loading', 'Sending your request…');
-
-    try {
-      const formData = new FormData(form);
-
-      const response = await fetch(form.dataset.ajaxAction, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (response.ok) {
-        setStatus('success', 'Thank you! Your quote request has been sent successfully. We’ll get back to you soon.');
-        form.reset();
-        clearAllErrors();
-      } else {
-        // FormSubmit sometimes returns useful messages
-        const errorMsg = data.message || data.error || 'Something went wrong. Please try again later.';
-        setStatus('error', errorMsg);
-      }
-    } catch (err) {
-      console.error('Form submission error:', err);
-      setStatus('error', 'Network error. Please check your connection and try again.');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-    }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') setOpen(false);
   });
 });

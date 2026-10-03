@@ -214,3 +214,16 @@ form.quote-form button{justify-self:center; margin-top:4px;}
 .promo-body .promo-link:after{content:" →";}
 @media(min-width:640px){ .promo-grid{grid-template-columns:repeat(2,1fr);} }
 @media(min-width:900px){ .promo-grid{grid-template-columns:repeat(4,1fr);} }
+
+/* ============ Floating contact button ============ */
+.fab-wrap{position:fixed; right:16px; bottom:calc(18px + env(safe-area-inset-bottom,0px)); z-index:60; display:flex; flex-direction:column-reverse; align-items:center; gap:12px;}
+.fab-item{width:46px; height:46px; border-radius:50%; background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(46,38,32,0.22); text-decoration:none; color:var(--ink); opacity:0; transform:translateY(10px) scale(0.85); pointer-events:none; transition:opacity .2s ease, transform .2s ease; }
+.fab-item svg{width:20px; height:20px;}
+.fab-wrap.open .fab-item{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+.fab-main{width:58px; height:58px; border-radius:50%; background:var(--matcha-d); color:#fff; border:none; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 24px rgba(46,38,32,0.3); cursor:pointer;}
+.fab-main svg{width:26px; height:26px; transition:transform .2s ease;}
+.fab-wrap.open .fab-main{background:var(--plum);}
+.fab-wrap.open .fab-main svg{transform:rotate(135deg);}
+.fab-label{position:absolute; right:60px; top:50%; transform:translateY(-50%); background:var(--plum); color:#fff; font-size:0.72rem; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s ease;}
+.fab-item:hover .fab-label{opacity:1;}
+@media(max-width:480px){ .fab-label{display:none;} }
