@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Compose order email — Two Sisters Tampa</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/compose.css">
+</head>
+<body class="compose">
+
+<header class="c-top">
+  <a class="brand" href="index.html"><img src="images/logo.png" alt="Two Sisters Tampa"></a>
+  <div class="c-top-title"><strong>Compose order email</strong><span>Order confirmation</span></div>
+  <a class="c-back" href="index.html">← Site</a>
+</header>
+
+<div class="c-tabs" role="group" aria-label="Switch view">
+  <button type="button" class="active" data-view="edit" aria-pressed="true">Edit</button>
+  <button type="button" data-view="preview" aria-pressed="false">Preview</button>
+</div>
+
+<main class="c-layout" id="layout" data-view="edit">
+
+  <form class="c-form" id="composeForm" novalidate autocomplete="off">
+
+    <!-- <details class="c-setup" id="setupBox">
+      <summary><span>Set up sending (one-time)</span><em class="pill-state" id="sendState">Not set up</em></summary>
+      <ol>
+        <li>Create a free account at <a href="https://www.emailjs.com" target="_blank" rel="noopener">emailjs.com</a> → <b>Email Services → Add New Service → Gmail</b>, connect <b>cuccu771@gmail.com</b>, and copy the <b>Service ID</b>.</li>
+        <li><b>Email Templates → Create New Template</b>. Set <b>Subject</b> = <code>{{subject}}</code>, <b>To Email</b> = <code>{{to_email}}</code>, <b>Reply To</b> = <code>cuccu771@gmail.com</code>, <b>Bcc</b> = <code>cuccu771@gmail.com</code> (keeps a copy for you). In the content editor switch to the code view (&lt;/&gt;) and paste only <code>{{{html_body}}}</code> (three braces). Save and copy the <b>Template ID</b>.</li>
+        <li><b>Account → General</b>: copy your <b>Public Key</b>.</li>
+        <li>Paste the three values into <code>js/compose.js</code> (top of the file, <code>EMAILJS</code>) and re-upload the site.</li>
+      </ol>
+      <p>Until then, <b>Copy for Gmail</b> works with no setup. See README §0.8 for security tips — keep this page private.</p>
+    </details> -->
+
+    <fieldset class="c-group">
+      <legend>Customer</legend>
+      <div class="field"><label for="f-name">Customer name</label><input id="f-name" name="name" type="text" autocomplete="off" placeholder="Katarina Smith"><p class="field-error" id="e-name"></p></div>
+      <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="off" placeholder="katarina@example.com"><p class="field-error" id="e-email"></p></div>
+    </fieldset>
+
+    <fieldset class="c-group">
+      <legend>Order details</legend>
+      <div class="field"><label for="f-style">Style</label><input id="f-style" name="style" type="text" placeholder="Custom Table Runner Cake"><p class="field-error" id="e-style"></p></div>
+      <div class="field"><label for="f-dimensions">Dimensions</label><input id="f-dimensions" name="dimensions" type="text" placeholder="30″ L × 8″ W × 5″ H"><p class="field-error" id="e-dimensions"></p></div>
+      <div class="field"><label for="f-design">Design</label><textarea id="f-design" name="design" rows="3" placeholder="Floral and fresh fruit arrangement, keeping the same overall style and details as the original inspiration."></textarea><p class="field-error" id="e-design"></p></div>
+      <div class="field"><label for="f-delivery">Delivery</label><input id="f-delivery" name="delivery" type="text" placeholder="Orlando, FL"><p class="field-error" id="e-delivery"></p></div>
+      <div class="field"><label for="f-setup">Setup</label><textarea id="f-setup" name="setup" rows="2" placeholder="On-site assembly and final decorative touches."></textarea><p class="field-error" id="e-setup"></p></div>
+    </fieldset>
+
+    <fieldset class="c-group">
+      <legend>Price breakdown</legend>
+      <div class="lines-head"><span>Item</span><span>Price (USD)</span></div>
+      <div id="lines"></div>
+      <p class="field-error" id="e-lines"></p>
+      <div class="lines-foot">
+        <button type="button" class="c-link" id="addLine">+ Add line</button>
+        <div class="total-box"><span>Total</span><strong id="totalOut">$0</strong></div>
+      </div>
+    </fieldset>
+
+    <button type="button" class="c-link c-clear" id="btnClear">Clear form</button>
+  </form>
+
+  <section class="c-preview" aria-label="Live email preview">
+    <div class="c-prev-head">
+      <div class="c-meta">
+        <div><span>To</span><b id="pvTo">—</b></div>
+        <div><span>Subject</span><b id="pvSubject"></b></div>
+      </div>
+      <button type="button" class="c-link" id="btnDownload">Download .html</button>
+    </div>
+    <iframe id="preview" title="Email preview"></iframe>
+  </section>
+</main>
+
+<div class="c-actions">
+  <p class="c-status" id="cStatus" role="status" aria-live="polite"></p>
+  <div class="c-btns">
+    <!-- <button type="button" class="cta-btn" id="btnSend">Send email</button> -->
+    <button type="button" class="cta-btn ghost" id="btnCopy">Copy for Gmail</button>
+  </div>
+</div>
+
+<script src="js/compose.js"></script>
+</body>
+</html>
