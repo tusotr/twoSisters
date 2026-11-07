@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Customers — Two Sisters Tampa</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/compose.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+<header class="c-top">
+  <a class="brand" href="index.html"><img src="images/logo.png" alt="Two Sisters Tampa"></a>
+  <div class="c-top-title"><strong>Customers</strong><span>Orders &amp; cake details</span></div>
+  <nav class="a-nav"><a class="c-back" href="compose.html">Compose</a><a class="c-back" href="index.html">← Site</a></nav>
+</header>
+
+<main class="a-wrap">
+  <div class="a-migrate" id="migrate" hidden>
+    <span id="migrateText"></span>
+    <button type="button" class="cta-btn" id="btnMigrate">Upload them</button>
+    <button type="button" class="c-link" id="btnMigrateSkip">Not now</button>
+  </div>
+
+  <div class="cal" id="cal">
+    <div class="cal-head">
+      <div class="cal-title">
+        <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">‹</button>
+        <h2 id="calLabel" aria-live="polite"></h2>
+        <button type="button" class="cal-nav" id="calNext" aria-label="Next month">›</button>
+      </div>
+      <div class="cal-actions">
+        <span class="cal-sum" id="calSum"></span>
+        <button type="button" class="c-link" id="calToday">Today</button>
+        <button type="button" class="c-link" id="calToggle" aria-expanded="true" aria-controls="calBody">Hide</button>
+      </div>
+    </div>
+    <div class="cal-body" id="calBody">
+      <table class="cal-grid">
+        <thead><tr><th scope="col">Sun</th><th scope="col">Mon</th><th scope="col">Tue</th><th scope="col">Wed</th><th scope="col">Thu</th><th scope="col">Fri</th><th scope="col">Sat</th></tr></thead>
+        <tbody id="calRows"></tbody>
+      </table>
+      <div class="cal-legend" id="calLegend" role="group" aria-label="Filter calendar by category"></div>
+      <div class="cal-agenda" id="calAgenda" aria-live="polite"></div>
+      <p class="cal-nodate" id="calNoDate" hidden></p>
+    </div>
+  </div>
+
+  <div class="a-toolbar">
+    <input type="search" id="q" placeholder="Search name, phone, email, notes…" aria-label="Search customers" autocomplete="off">
+    <button type="button" class="cta-btn" id="btnNew">+ New customer</button>
+  </div>
+
+  <div class="a-filters">
+    <label>Category <select id="fCat"></select></label>
+    <label>Delivery
+      <select id="fDate">
+        <option value="all">All dates</option>
+        <option value="upcoming">Upcoming</option>
+        <option value="week">Next 7 days</option>
+        <option value="month">This month</option>
+        <option value="past">Past</option>
+        <option value="none">No date set</option>
+      </select>
+    </label>
+    <label>Sort
+      <select id="fSort">
+        <option value="soonest">Soonest delivery</option>
+        <option value="latest">Latest delivery</option>
+        <option value="name">Name A–Z</option>
+        <option value="total">Total (high → low)</option>
+        <option value="added">Recently added</option>
+      </select>
+    </label>
+    <button type="button" class="c-link" id="btnReset">Reset</button>
+  </div>
+
+  <div class="a-summary"><strong id="sumText"></strong><span class="a-hint" id="hint"></span></div>
+
+  <div class="a-tablewrap">
+    <table class="a-table">
+      <thead><tr><th>Name</th><th>Facebook chat</th><th>Order category</th><th>Delivery date</th><th class="r">Total</th><th class="r"><span class="sr">Delete</span></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="a-empty" id="empty" hidden></div>
+  </div>
+
+  <p class="a-foot">
+    <span id="storageNote"></span>
+    <button type="button" class="c-link" id="btnExport">Export backup</button>
+    <button type="button" class="c-link" id="btnImport">Import backup</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+  </p>
+</main>
+
+<dialog class="drawer" id="drawer" aria-labelledby="drawerTitle">
+  <form class="c-form" id="custForm" novalidate autocomplete="off">
+    <div class="drawer-head">
+      <h2 id="drawerTitle">New customer</h2>
+      <button type="button" class="drawer-x" id="btnX" aria-label="Close">×</button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="field"><label for="f-name">Name</label><input id="f-name" type="text" placeholder="Katarina Smith"><p class="field-error" id="e-name"></p></div>
+      <div class="field"><label for="f-fb">Facebook chat link</label><input id="f-fb" type="text" inputmode="url" placeholder="m.me/katarina.smith"><p class="field-error" id="e-fb"></p></div>
+      <div class="two">
+        <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" type="tel" placeholder="+1 555 123 4567"><p class="field-error" id="e-phone"></p></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" inputmode="email" placeholder="name@example.com"><p class="field-error" id="e-email"></p></div>
+      </div>
+      <div class="field"><label for="f-date">Delivery date</label><input id="f-date" type="date"><p class="field-error" id="e-date"></p></div>
+
+      <div class="field">
+        <span class="lbl">Order category <small>(pick all that apply)</small></span>
+        <div class="chipset" id="chips" role="group" aria-label="Order categories"></div>
+        <div class="addcat"><input id="newCat" type="text" placeholder="Add another category…" aria-label="New category name"><button type="button" class="c-link" id="btnAddCat">Add</button></div>
+      </div>
+
+      <div class="field"><label for="f-detail">Detail</label><textarea id="f-detail" rows="4" placeholder="Size, flavor, design, delivery address…"></textarea></div>
+
+      <div class="field">
+        <span class="lbl">Price breakdown <small>(choose items from the menu, or add a custom item)</small></span>
+        <div id="items"></div>
+        <p class="field-error" id="e-items"></p>
+        <button type="button" class="c-link addline" id="btnAddItem">+ Add item</button>
+        <div class="total-row">
+          <label for="f-total">Total (USD)</label>
+          <input id="f-total" type="text" inputmode="decimal" placeholder="0">
+        </div>
+        <small class="total-hint" id="totalHint"></small>
+        <p class="field-error" id="e-total"></p>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Reference pictures</span>
+        <div class="thumbs" id="thumbs"></div>
+        <label class="filebtn">+ Add pictures<input id="f-images" type="file" accept="image/*" multiple hidden></label>
+        <p class="field-error" id="e-images"></p>
+      </div>
+
+      <div class="field"><label for="f-note">Note</label><textarea id="f-note" rows="3" placeholder="Internal notes (not sent to the customer)"></textarea></div>
+      <p class="field-error" id="e-form" role="alert"></p>
+    </div>
+
+    <div class="drawer-foot">
+      <div class="left">
+        <button type="button" class="btn-danger" id="btnDelete" hidden>Delete</button>
+        <button type="button" class="cta-btn ghost" id="btnCompose" hidden>Compose email →</button>
+      </div>
+      <div class="right">
+        <button type="button" class="cta-btn ghost" id="btnCancel">Cancel</button>
+        <button type="submit" class="cta-btn" id="btnSave">Save</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="viewer" id="viewer"><img id="viewerImg" alt="Reference picture"><button type="button" class="drawer-x" id="viewerX" aria-label="Close picture">×</button></dialog>
+
+<div class="c-toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/store.js"></script>
+<script src="js/store-supabase.js"></script>
+<script src="js/auth-gate.js"></script>
+<script src="js/menu-data.js"></script>
+<script src="js/customers.js"></script>
+</body>
+</html>

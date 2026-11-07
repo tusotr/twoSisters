@@ -165,11 +165,15 @@
   }
 
   // ---------- draft ----------
-  function saveDraft() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collect())); } catch (e) {} }
+  // When opened from a customer record (?customer=<id>) the draft is tied to that
+  // customer, so one customer's details can never leak into another's email.
+  const customerId = new URLSearchParams(location.search).get('customer') || '';
+  function saveDraft() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(Object.assign(collect(), { customerId: customerId }))); } catch (e) {} }
   function loadDraft() {
     try {
       const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
       if (!d) return;
+      if (customerId && d.customerId !== customerId) return;
       FIELDS.forEach((k) => { if (typeof d[k] === 'string') $('#f-' + k).value = d[k]; });
       if (Array.isArray(d.lines) && d.lines.length) lines = d.lines.map((l) => ({ label: String(l.label || ''), amount: String(l.amount || '') }));
     } catch (e) {}
@@ -305,7 +309,7 @@
     status('Downloaded ✓', 'ok');
   }
 
-  // $('#btnSend').addEventListener('click', send);
+  $('#btnSend').addEventListener('click', send);
   $('#btnCopy').addEventListener('click', copyForGmail);
   $('#btnDownload').addEventListener('click', download);
   $('#btnClear').addEventListener('click', () => {
@@ -325,4 +329,24 @@
   loadDraft();
   renderLines();
   renderPreview();
+
+  // Pre-fill from the customer record (name + email), if we were sent here from it.
+  if (customerId) {
+    const banner = $('#custBanner');
+    banner.hidden = false;
+    const fail = (msg) => { banner.className = 'c-banner warn'; banner.textContent = msg; };
+    if (!window.Store) fail('Couldn’t load customer records in this browser.');
+    else Store.get(customerId).then((c) => {
+      if (!c) { fail(Store.mode === 'cloud' ? 'That customer record wasn’t found.' : 'That customer record wasn’t found in this browser.'); return; }
+      if (!$('#f-name').value.trim()) $('#f-name').value = c.name;
+      if (!$('#f-email').value.trim()) $('#f-email').value = c.email;
+      // Bring over the price breakdown too (unless this email already has price lines).
+      if (c.items && c.items.length && !lines.some((l) => l.label.trim() || l.amount.trim())) {
+        lines = c.items.map((it) => ({ label: (it.qty > 1 ? it.qty + ' × ' : '') + it.name, amount: String(it.amount) }));
+        renderLines();
+      }
+      banner.innerHTML = 'Composing for <b>' + esc(c.name) + '</b>' + (c.email ? '' : ' — this customer has no email saved yet') + ' · <a href="customers.html">Back to customers</a>';
+      update();
+    }).catch(() => fail('Couldn’t load the customer record.'));
+  }
 })();
